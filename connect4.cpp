@@ -119,15 +119,46 @@ bool checkWinner(const Board& board, int row, int col, char piece)
 
 }
 
+bool isBoardFull(const Board& board)
+{
+    for (int c = 0; c < COLS; ++c)
+    {
+        if (board[0][c] == EMPTY) return false;
+    }
+    return true;
+}
 
 
 int main()
 {
     std::cout << "Testing board creation: " << std::endl;
     Board board = createBoard();
-    dropPiece(board, 3, 'X');
-    dropPiece(board, 3, 'X');
-    dropPiece(board, 2, 'X');
+    char currentPlayer = 'X';
+    bool gameComplete = false;
     printBoard(board);
+
+    while (!gameComplete)
+    {
+        int col = getColInput(board, currentPlayer);
+        int row = dropPiece(board, col, currentPlayer);
+        printBoard(board);
+
+        if (checkWinner(board, row, col, currentPlayer))
+        {
+            std::cout << "Player " << currentPlayer << " wins!\n";
+            gameComplete = true;
+        }
+
+        else if (isBoardFull(board))
+        {
+            std::cout << "It's a draw!";
+            gameComplete = true;
+        }
+
+        else 
+        {
+            currentPlayer = (currentPlayer == 'X') ? 'O' : 'X';
+        }
+    }
     return 0;
 }
